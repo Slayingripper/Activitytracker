@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Listme extends AppCompatActivity {
     //Context context = this;
     public static final String TAG = "Activitytracker";
     ContentResolver resolver;
-    Cursor getInfo;
+    Cursor getInfo,getfastest,getoldest;
     ListView listView;
     attributeListAdapter adapter;
     private ArrayList<attributes> mAttibutesList;
@@ -41,7 +42,11 @@ public class Listme extends AppCompatActivity {
         final DBhandler dbhandler = new DBhandler ( this );
         getInfo = dbhandler.getinfo ();
         Log.d ( "g53mdp", "oncreate works" );
-
+        Spinner dropdown = findViewById(R.id.spinner);
+        String[] items = new String[]{"1", "2", "three"};
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>
+                (this, android.R.layout.simple_spinner_dropdown_item, items);
+        dropdown.setAdapter(adapter2);
         listView = findViewById ( R.id.dateList );
 
         mAttibutesList = new ArrayList<> (  );
@@ -91,5 +96,44 @@ public class Listme extends AppCompatActivity {
         } );
 
     }
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id)
+    {
 
+        switch (position) {
+            case 0:
+                while(getInfo.moveToNext () ){
+                    mAttibutesList.add ( new attributes (  getInfo.getString ( getInfo.getColumnIndex ( "datetime" ) ),
+                            getInfo.getString ( getInfo.getColumnIndex ( "time" ) ),
+                            getInfo.getString ( getInfo.getColumnIndex ( "distance" ) ) ,
+                            getInfo.getString ( getInfo.getColumnIndex ( "speed" ) ) ) );
+                }
+                // Whatever you want to happen when the first item gets selected
+                break;
+            case 1:
+            while    (getfastest.moveToNext () ){
+                mAttibutesList.add ( new attributes (  getfastest.getString ( getfastest.getColumnIndex ( "datetime" ) ),
+                        getfastest.getString ( getfastest.getColumnIndex ( "time" ) ),
+                        getfastest.getString ( getfastest.getColumnIndex ( "distance" ) ) ,
+                        getfastest.getString ( getfastest.getColumnIndex ( "speed" ) ) ) );
+            }
+                // Whatever you want to happen when the second item gets selected
+                break;
+            case 2:
+                while    (getoldest.moveToNext () ){
+                    mAttibutesList.add ( new attributes (  getoldest.getString ( getoldest.getColumnIndex ( "datetime" ) ),
+                            getoldest.getString ( getoldest.getColumnIndex ( "time" ) ),
+                            getoldest.getString ( getoldest.getColumnIndex ( "distance" ) ) ,
+                            getoldest.getString ( getoldest.getColumnIndex ( "speed" ) ) ) );
+                }
+                // Whatever you want to happen when the thrid item gets selected
+                break;
+
+            default:
+                throw new IllegalStateException ( "Unexpected value: " + position );
+        }
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // TODO Auto-generated method stub
+    }
 }

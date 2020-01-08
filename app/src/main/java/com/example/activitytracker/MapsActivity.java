@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -81,9 +82,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 adddata ( locationInfo );
                 startActivity(intent);
 
+                MapsActivity.super.stopService ( intent );
+                MapsActivity.super.onDestroy ();
 
-              //  MapsActivity.this.finishActivity ( 1 );
-               // MapsActivity.super.onDestroy ();
             }
         } );
 
@@ -96,18 +97,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 != PackageManager.PERMISSION_GRANTED &&
                 checkSelfPermission ( Manifest.permission.ACCESS_COARSE_LOCATION )
                         != PackageManager.PERMISSION_GRANTED) {
-
-            // TODO: Consider calling
-            //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
+            //
             return;
 
-        }
 
+        }
 
         //we are checking if the provider is available
         if (locationManager.isProviderEnabled ( LocationManager.GPS_PROVIDER )) {
@@ -132,8 +126,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     "latitude:" + firstlat + " longitude:" + firstlong,
                                     Toast.LENGTH_SHORT).show();
 
-
-
                             //get the latitude
                              latitude = location.getLatitude ();
                             //get the longitude
@@ -145,32 +137,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             //we use Geocoder to convert the values of latlng
                             Geocoder geocoder = new Geocoder ( getApplicationContext () );
-                            /*try {
-                                geocoder.getFromLocation ( firstlat ,firstlat,1);
-                            } catch (IOException e) {
-                                e.printStackTrace ();
-                            }*/
 
                             try {
                                 List<Address> addressList = geocoder.getFromLocation ( latitude, longitude, 1 );
 
                                 // mMap.addMarker(new MarkerOptions().position(latLng).title(str));
-                                mMap.getUiSettings ().setZoomControlsEnabled ( true );
+
                                 CircleOptions circleOptions = new CircleOptions ();
                                 circleOptions.center ( new LatLng ( location.getLatitude (),
                                         location.getLongitude () ) );
+
                                 circleOptions.radius ( 30 );
                                 circleOptions.fillColor ( Color.BLUE );
                                 circleOptions.strokeWidth ( 6 );
 
                                 mMap.addCircle ( circleOptions );
 
-
                                 mMap.moveCamera ( CameraUpdateFactory.newLatLngZoom ( latLng, 14.0f ) );
-                           /*     dis = biglocation.distanceTo ( location );
-                                biglocation = location;
-                                distance = dis + distance;
-                                Log.d ( "GOT THE DISTANCE", String.valueOf ( distance ) );*/
+
 
                             } catch (IOException e) {
                                 e.printStackTrace ();
@@ -180,14 +164,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         @Override
                         public void onStatusChanged(String provider, int status, Bundle extras) {
-                            Toast.makeText(MapsActivity.this,
-                                    "latitude:" + firstlat + " longitude:" + firstlong,
-                                    Toast.LENGTH_SHORT).show();
+
                         }
 
                         @Override
                         public void onProviderEnabled(String provider) {
-
+                            Toast.makeText(MapsActivity.this,
+                                    "latitude:" + firstlat + " longitude:" + firstlong,
+                                    Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -202,22 +186,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     ( LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener () {
                         @Override
                         public void onLocationChanged(Location location) {
-
-                            /*locationInfo = location;
-                            locationA = new Location( String.valueOf ( provider ) );
-                            try {
-                                locationA = locationManager.getLastKnownLocation( String.valueOf ( provider ) );
-                            } catch(SecurityException e) {
-                                e.printStackTrace();
+                            if (firstlong == 0.0) {
+                                firstlong = location.getLongitude ();
                             }
-                            locationInfo = location;
 
-                            iTrackPoint++;
-                            try {
-                                distance = location.distanceTo(locationA) / 1000;
-                            } catch (NullPointerException e) {
-                                e.printStackTrace();
-                            }*/
+                            else {
+                                if (firstlat == 0.0) {
+                                    firstlat = location.getLatitude ();
+                                }
+                            }
+
                             //get the latitude
                             double latitude = location.getLatitude ();
                             //get the longitude
@@ -235,7 +213,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 String str = addressList.get ( 0 ).getLocality () + ",";
                                 str += addressList.get ( 0 ).getCountryName ();
                                 // mMap.addMarker(new MarkerOptions().position(latLng).title(str));
-                                mMap.getUiSettings ().setZoomControlsEnabled ( true );
                                 CircleOptions circleOptions = new CircleOptions ();
                                 circleOptions.center ( new LatLng ( location.getLatitude (),
                                         location.getLongitude () ) );
@@ -246,7 +223,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 mMap.addCircle ( circleOptions );
 
-                                mMap.moveCamera ( CameraUpdateFactory.newLatLngZoom ( latLng, 15.0f ) );
+                                mMap.moveCamera ( CameraUpdateFactory.newLatLngZoom ( latLng, 14.0f ) );
 
                             } catch (IOException e) {
                                 e.printStackTrace ();
@@ -293,6 +270,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.isIndoorEnabled ();
+        mMap.isBuildingsEnabled ();
+        mMap.getUiSettings ().setZoomControlsEnabled ( true );
+
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
