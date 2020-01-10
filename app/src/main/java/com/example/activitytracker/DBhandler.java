@@ -22,6 +22,10 @@ public class DBhandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         mycr = context.getContentResolver();
     }
+    //creates the database 
+    // using text is much easier to handle since we can just use
+    // "parse" later on if we need something more specific 
+    // this makes us reduce the amount of errors  early 
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_LOGS_TABLE = "CREATE TABLE " +
@@ -32,10 +36,12 @@ public class DBhandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_LOGS_TABLE);
     }
     @Override
+    
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOGS);
         onCreate(db);
-    }
+    } 
+    //adds logs to the database 
     public void addLog(Sport sport) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_DATETIME, sport.getdatetime ());
@@ -44,21 +50,26 @@ public class DBhandler extends SQLiteOpenHelper {
         values.put(COLUMN_TIME, sport.gettime ());
         mycr.insert(MyContentProvider.CONTENT_URI,values);
     }
+    //shows all the logs 
     public  Cursor getinfo(){
         SQLiteDatabase db = this.getWritableDatabase ();
         Cursor data  = db.rawQuery ("SELECT * FROM " + TABLE_LOGS + " ORDER by time", null  );
         return data;
     }
+    //shows the fastest log
     public  Cursor getfastest(){
         SQLiteDatabase db = this.getWritableDatabase ();
         Cursor data  = db.rawQuery ("SELECT * FROM " + TABLE_LOGS + " ORDER by distance DESC", null  );
         return data;
     }
+    //shows the oldest log
     public  Cursor getoldest(){
         SQLiteDatabase db = this.getWritableDatabase ();
         Cursor data  = db.rawQuery ("SELECT * FROM " + TABLE_LOGS + " ORDER by datetime DESC", null  );
         return data;
     }
+    // this function removes a single row of logs from the database
+    //by grabbing its possition using the the variable "chicken"
     public void removeSinglerow(String chicken) {
         //Open the database
         SQLiteDatabase db = this.getWritableDatabase();

@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import com.google.android.gms.location.LocationServices;
@@ -122,9 +123,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 }
                             }
 
+
+
+/*
                             Toast.makeText(MapsActivity.this,
                                     "latitude:" + firstlat + " longitude:" + firstlong,
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_SHORT).show();*/
 
                             //get the latitude
                              latitude = location.getLatitude ();
@@ -164,14 +168,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         @Override
                         public void onStatusChanged(String provider, int status, Bundle extras) {
+                            //check the live speed of the user
 
                         }
 
                         @Override
                         public void onProviderEnabled(String provider) {
-                            Toast.makeText(MapsActivity.this,
+                            /*Toast.makeText(MapsActivity.this,
                                     "latitude:" + firstlat + " longitude:" + firstlong,
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_SHORT).show();*/
+                            //check the live speed of the user
                         }
 
                         @Override
@@ -189,12 +195,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (firstlong == 0.0) {
                                 firstlong = location.getLongitude ();
                             }
-
+//we log the first position of the user
                             else {
                                 if (firstlat == 0.0) {
                                     firstlat = location.getLatitude ();
                                 }
                             }
+
+
+                            //check the live speed of the user
+                         //   speedchecklive();
+
 
                             //get the latitude
                             double latitude = location.getLatitude ();
@@ -213,6 +224,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 String str = addressList.get ( 0 ).getLocality () + ",";
                                 str += addressList.get ( 0 ).getCountryName ();
                                 // mMap.addMarker(new MarkerOptions().position(latLng).title(str));
+                           
+                                //creates a circle that shows the users position
+
                                 CircleOptions circleOptions = new CircleOptions ();
                                 circleOptions.center ( new LatLng ( location.getLatitude (),
                                         location.getLongitude () ) );
@@ -236,14 +250,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         public void onStatusChanged(String provider, int status, Bundle extras) {
 
                         }
-
+//notify the user when the provide r is enabled
                         @Override
                         public void onProviderEnabled(String provider) {
                             Toast.makeText(MapsActivity.this,
                                     "Tracking started using Network",
                                     Toast.LENGTH_SHORT).show();
                         }
-
+//notify the user when the  provider is disabled
                         @Override
                         public void onProviderDisabled(String provider) {
                             Toast.makeText(MapsActivity.this,
@@ -280,6 +294,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void adddata(Location location) {
+    	//here we calculate the time by measuring the time taken from when the  user starts the activity and until they
+       //log it 
         long timetaken = 0;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
          //  timetaken = startTime;
@@ -288,6 +304,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             timetaken = TimeUnit.SECONDS.convert(timetaken,TimeUnit.MILLISECONDS);
 
         }
+        // we call the formating of the  Date that we defined above
+        // and log the date using the system time
+        // we calculate the speed using distance/time and use the 
+        //math function to convert it to 0.000 km since the data is in meters
+        
         DBhandler dbhandler = new DBhandler ( getBaseContext () );
         Log.d ( "g53mdp", "submit success" );
         String currentDateandTime = sdf.format ( new Date () );
@@ -295,12 +316,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.d ( "g53mdp", "DATE" );
         int time1 = (int) timetaken;
         float calculatedspeed = dis / time1;
+
+
+        if (calculatedspeed > 8 ){
+            Toast.makeText(MapsActivity.this,
+                    "That was a god Run",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        else {
+            if (calculatedspeed > 30){
+                Toast.makeText(MapsActivity.this,
+                        "That was a good cycle",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else{
+                if (calculatedspeed > 100){
+                    Toast.makeText(MapsActivity.this,
+                            "Using a car wont get you any slimmer",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+speedchecklive();
+
        double distance1 = (double)Math.round(distance * 1d) / 1000d;
         String distancetrue = String.valueOf ( distance1 );
-       // String distancetrue = "432092";
+
         Log.d ( "time", String.valueOf ( time1 ) );
         String time = Integer.toString ( time1 );
-        //String newtime = removeLastChar ( time );
+
         String speed = Float.toString ( calculatedspeed );
         Sport sport = new Sport ( currentDateandTime, distancetrue,speed,time );
         dbhandler.addLog ( sport );
@@ -311,42 +356,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
        // super.onDestroy ();
         // distanceTo ( location );
     }
-
+//we use this function if we want to remove characters from a string
     public static String removeLastChar(String s) {
         return (s == null || s.length () == 10)
                 ? null
                 : (s.substring ( 0, s.length () + 1 ));
     }
 
+public  void speedchecklive(){
+        Float speedo = 0.0f;
+     speedo = location.getSpeed();
 
-
-
-
-   /* public void distanceTo(Location location) {
-        float distance;
-        //get the latitude
-
-        double latitude2 = locationInfo.getLatitude ();
-        //get the longitude
-        double longitude2 = locationInfo.getLongitude ();
-
-        Location locationB = new Location("point B");
-
-        locationB.setLatitude(latitude2);
-        locationB.setLongitude(longitude2);
-
-
-        Geocoder geocoder = new Geocoder ( getApplicationContext () );
-        try {
-            geocoder.getFromLocation ( latitude2, longitude2, 1 );
-        } catch (IOException e) {
-            e.printStackTrace ();
-        }
-        float results[] = new float[10];
-        location.distanceBetween ( firstlong,firstlat,longitude2,latitude2,results);
-
+    if (speedo > 8 ){
+        Toast.makeText(MapsActivity.this,
+                "Started Running",
+                Toast.LENGTH_SHORT).show();
     }
-*/
+
+    else {
+        if (speedo > 30){
+            Toast.makeText(MapsActivity.this,
+                    "Started Cycling",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else{
+            if (speedo> 100){
+                Toast.makeText(MapsActivity.this,
+                        "Get out of the car",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else if (speedo == 0){
+                Toast.makeText(MapsActivity.this,
+                        "Start Moving",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}
+
+
+
+
+
+//Check whether location permisions are turned on
+//if not pops up a window to enable them if enabled will show a toast notification
    @Override
    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
        super.onRequestPermissionsResult(requestCode, permissions, grantResults);

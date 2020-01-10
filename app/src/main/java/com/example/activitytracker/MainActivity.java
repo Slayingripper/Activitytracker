@@ -35,20 +35,20 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+// opens the list view showin the database 
 public void onlistbtnclick (View view){
     Intent intent = new Intent(this, Listme.class);
     startActivity(intent);
     Log.d(TAG, "Listing OPENED");
 
 }
-
+//starts the workout and the service 
 public  void onstartclick (View view){
     Intent intent = new Intent(this, MapsActivity.class);
     startActivity(intent);
     Log.d(TAG, "Listing OPENED");
 }
-
+//kills the process and the location provider 
 public  void onexit (View view){
     android.os.Process.killProcess(android.os.Process.myPid());
     System.exit(1);

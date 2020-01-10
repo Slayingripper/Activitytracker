@@ -34,6 +34,8 @@ public class attributeListAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
+//sets the values of the list adapter
+//and handles how they will be displayed
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -46,6 +48,7 @@ public class attributeListAdapter extends BaseAdapter {
         TextView distance = convertView.findViewById ( R.id.distanceText );
         TextView speed = convertView.findViewById ( R.id.speedText );
         TextView time = convertView.findViewById ( R.id.timeText );
+//handles the contents that is displayed in the text views
 
         final attributes mattributes = mAttributesList.get ( position );
        dateTime.setText(  mattributes.getDateTime ()  );

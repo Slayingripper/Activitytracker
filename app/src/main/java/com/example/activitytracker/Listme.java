@@ -50,7 +50,9 @@ public class Listme extends AppCompatActivity {
         listView = findViewById ( R.id.dateList );
 
         mAttibutesList = new ArrayList<> (  );
-
+//grabs the data from the database and displays into to an
+//array list while . This function will grab the data as is 
+//will no sorts
         while(getInfo.moveToNext () ){
             mAttibutesList.add ( new attributes (  getInfo.getString ( getInfo.getColumnIndex ( "datetime" ) ),
                     getInfo.getString ( getInfo.getColumnIndex ( "time" ) ),
@@ -96,6 +98,9 @@ public class Listme extends AppCompatActivity {
         } );
 
     }
+    
+    // we use a drop down spinner to query the database witb questions 
+    
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id)
     {
 
@@ -125,7 +130,7 @@ public class Listme extends AppCompatActivity {
                             getoldest.getString ( getoldest.getColumnIndex ( "distance" ) ) ,
                             getoldest.getString ( getoldest.getColumnIndex ( "speed" ) ) ) );
                 }
-                // Whatever you want to happen when the thrid item gets selected
+                // Whatever you want to happen when the thri item gets selected
                 break;
 
             default:
