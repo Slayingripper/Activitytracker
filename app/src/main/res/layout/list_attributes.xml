@@ -16,14 +16,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date worked out : "/>
+            android:text="Date worked out : "
+            android:textColor="#FAFAFA" />
 
         <TextView
+            android:id="@+id/dateTimeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/dateTimeText"
             android:text="datetime"
-            android:textSize="15dp"/>
+            android:textColor="#FFFFFF"
+            android:textSize="15dp" />
 
     </LinearLayout>
 
@@ -36,13 +38,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time Taken: "/>
+            android:text="Time Taken: "
+            android:textColor="#FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/timeText"
             android:text="Time"
+            android:textColor="#FFFFFF"
             android:textSize="15dp"/>
 
     </LinearLayout>
@@ -55,6 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
             android:text="Distance: "/>
 
         <TextView
@@ -62,6 +67,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/distanceText"
             android:text="speed"
+            android:textColor="#FFFFFF"
             android:textSize="15dp"/>
 
     </LinearLayout>
@@ -75,6 +81,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
             android:text="Speed : "/>
 
         <TextView
@@ -82,6 +89,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/speedText"
             android:text="time"
+            android:textColor="#FFFFFF"
             android:textSize="15dp"/>
 
     </LinearLayout>

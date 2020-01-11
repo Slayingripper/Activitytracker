@@ -7,32 +7,37 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AnalogClock;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DigitalClock;
 import android.widget.Spinner;
+import java.util.Calendar;
+
+import org.shredzone.commons.suncalc.SunTimes;
+
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     Button listbtn,startbtn,stopbtn;
-
+    Date date = Calendar.getInstance().getTime(); // date of calculation
+    //for nottingham
+    double lat= 52.9536000;
+    double lng = -1.1504700 ;// geolocation
     public static final String TAG = "ActivityMain";
-    Spinner spinner;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AnalogClock simpleAnalogClock = (AnalogClock)findViewById(R.id.analogClock);
+        DigitalClock simpleDigitalClock = (DigitalClock) findViewById(R.id.digitalClock);
         listbtn = findViewById(R.id.listbtn);
         startbtn = findViewById(R.id.startbtn);
         stopbtn = findViewById(R.id.stopbtn);
         Log.d(TAG, "Buttons created");
-
-        Spinner dropdown = findViewById(R.id.spinner);
-        String[] items = new String[]{"1", "2", "three"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>
-                (this, android.R.layout.simple_spinner_dropdown_item, items);
-        dropdown.setAdapter(adapter);
-
-
+        calculatesun();
 
     }
 // opens the list view showin the database 
@@ -49,29 +54,17 @@ public  void onstartclick (View view){
     Log.d(TAG, "Listing OPENED");
 }
 //kills the process and the location provider 
-public  void onexit (View view){
+public  void onexit (View view) {
     android.os.Process.killProcess(android.os.Process.myPid());
     System.exit(1);
-    }
-
-
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-
-        switch (position) {
-            case 0:
-                // Whatever you want to happen when the first item gets selected
-                break;
-            case 1:
-                // Whatever you want to happen when the second item gets selected
-                break;
-            case 2:
-                // Whatever you want to happen when the thrid item gets selected
-                break;
-
-        }
 }
+public void calculatesun(){
+        SunTimes times = SunTimes.compute()
+            .on(date)       // set a date
+            .at(lat, lng)   // set a location
+            .execute();     // get the results
+    System.out.println("Sunrise: " + times.getRise());
+    System.out.println("Sunset: " + times.getSet());
 
-    public void onNothingSelected(AdapterView<?> parent) {
-        // TODO Auto-generated method stub
-    }
+}
 }
