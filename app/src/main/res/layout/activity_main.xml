@@ -4,11 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00160101"
+    android:addStatesFromChildren="false"
+    android:background="@drawable/background"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/startbtn"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
@@ -17,6 +19,7 @@
         android:layout_marginRight="163dp"
         android:layout_marginBottom="112dp"
         android:onClick="onstartclick"
+        android:src="@drawable/start"
         android:text="Start Work out"
         app:layout_constraintBottom_toTopOf="@+id/stopbtn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,7 +33,7 @@
         android:layout_marginLeft="155dp"
         android:layout_marginEnd="168dp"
         android:layout_marginRight="168dp"
-        android:layout_marginBottom="192dp"
+        android:layout_marginBottom="84dp"
         android:onClick="onexit"
         android:text="stop "
         app:layout_constraintBottom_toBottomOf="parent"
@@ -48,6 +51,7 @@
         android:layout_marginEnd="162dp"
         android:layout_marginRight="162dp"
         android:onClick="onlistbtnclick"
+        android:src="@drawable/clock"
         android:text="My workouts"
         app:layout_constraintBottom_toTopOf="@+id/startbtn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -73,4 +77,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/listbtn"
         app:layout_constraintVertical_bias="0.0" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

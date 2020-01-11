@@ -14,11 +14,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/finishline"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/finishline"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <!--android:theme="@style/AppTheme"-->
+
 
 
         <!--
@@ -44,7 +46,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+       <!-- <receiver android:name=".MyBroadcastreceiver">
+            <intent-filter>
+                <action android:name="com.tutlane.CUSTOM_INTENT">
+                </action>
+            </intent-filter>
+        </receiver>-->
+        <receiver android:name=".MyBroadcastreceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
         <service
             android:name=".MapsActivity"
             android:enabled="true"

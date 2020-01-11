@@ -30,7 +30,7 @@ public class Listme extends AppCompatActivity {
     ListView listView;
     attributeListAdapter adapter;
     private ArrayList<attributes> mAttibutesList;
-
+    public int numberoflogs = 0 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +58,13 @@ public class Listme extends AppCompatActivity {
                     getInfo.getString ( getInfo.getColumnIndex ( "time" ) ),
                     getInfo.getString ( getInfo.getColumnIndex ( "distance" ) ) ,
                     getInfo.getString ( getInfo.getColumnIndex ( "speed" ) ) ) );
+
         }
 
         adapter = new attributeListAdapter ( getApplicationContext (), mAttibutesList );
         listView.setAdapter ( adapter );
-
+        numberoflogs = listView.getCount();
+        Log.d ( "The number of logs are", String.valueOf ( numberoflogs ) );
 
         listView.setOnItemLongClickListener ( new AdapterView.OnItemLongClickListener () {
             @Override

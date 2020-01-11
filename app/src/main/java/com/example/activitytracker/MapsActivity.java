@@ -4,8 +4,10 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,18 +23,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+//import com.google.android.gms.location.LocationListener;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.SphericalUtil;
 
 import java.io.IOException;
 import java.util.Date;
@@ -62,17 +63,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Double latitude = 0.0 , longitude = 0.0;
     Location location ;
     public static Location locationInfo;
-
+MyBroadcastreceiver receiver;
+IntentFilter intentFilter;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate ( savedInstanceState );
         setContentView ( R.layout.activity_maps );
+
         stopbtn = findViewById ( R.id.stopbtn );
+
        // startTime =SystemClock.elapsedRealtime ();
         requestLocationPermission();
         startTime = System.currentTimeMillis();
         preference = getSharedPreferences("TimeWrap", Context.MODE_PRIVATE);
+        receiver = new MyBroadcastreceiver();
+        intentFilter = new IntentFilter("com.example.activitytracker.CUSTOM_INTENT");
+        broadcastIntent();
+
         stopbtn.setOnClickListener ( new View.OnClickListener () {
             @Override
             public void onClick(View v) {
@@ -82,11 +90,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Intent intent = new Intent ( getApplication (), MainActivity.class );
                 adddata ( locationInfo );
                 startActivity(intent);
+               MapsActivity.this.finish();
+                //locationManager.removeUpdates();
+                /*MapsActivity.super.stopService ( intent );
+                MapsActivity.super.onDestroy ();*/
 
-                MapsActivity.super.stopService ( intent );
-                MapsActivity.super.onDestroy ();
 
             }
+
+
+
         } );
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -338,7 +351,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         }
-speedchecklive();
+
 
        double distance1 = (double)Math.round(distance * 1d) / 1000d;
         String distancetrue = String.valueOf ( distance1 );
@@ -418,5 +431,26 @@ public  void speedchecklive(){
             EasyPermissions.requestPermissions(this, "Please grant the location permission", REQUEST_LOCATION_PERMISSION, perms);
         }
 }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+
+        registerReceiver(receiver, intentFilter);
+
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(receiver);
+    }
+    public void broadcastIntent() {
+        Intent intent = new Intent();
+        intent.setAction("com.example.activitytracker.CUSTOM_INTENT");
+        intent.setComponent(new ComponentName(getPackageName(),"com.example.activitytracker.MyBroadcastreceiver"));
+        getApplicationContext().sendBroadcast(intent);
+    }
 
 }

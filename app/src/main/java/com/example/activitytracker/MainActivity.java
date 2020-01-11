@@ -54,6 +54,7 @@ public  void onexit (View view){
     System.exit(1);
     }
 
+
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 
         switch (position) {
