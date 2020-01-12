@@ -2,8 +2,10 @@ package com.example.activitytracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     double lat= 52.9536000;
     double lng = -1.1504700 ;// geolocation
     public static final String TAG = "ActivityMain";
-
+    Vibrator v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,32 +37,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         AnalogClock simpleAnalogClock = (AnalogClock)findViewById(R.id.analogClock);
         DigitalClock simpleDigitalClock = (DigitalClock) findViewById(R.id.digitalClock);
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         listbtn = findViewById(R.id.listbtn);
         startbtn = findViewById(R.id.startbtn);
         stopbtn = findViewById(R.id.stopbtn);
         Log.d(TAG, "Buttons created");
-
+        v.vibrate(100);
 
     }
-// opens the list view showin the database 
+// opens the list view showing the database
 public void onlistbtnclick (View view){
     Intent intent = new Intent(this, Listme.class);
     startActivity(intent);
+
     Log.d(TAG, "Listing OPENED");
+
 
 }
 //starts the workout and the service 
 public  void onstartclick (View view){
     Intent intent = new Intent(this, MapsActivity.class);
     startActivity(intent);
+
     Log.d(TAG, "Listing OPENED");
 }
 //kills the process and the location provider 
 public  void onexit (View view) {
+
     android.os.Process.killProcess(android.os.Process.myPid());
     System.exit(1);
 }
 public void onsun(View view){
+
     calculatesun();
 }
 public void calculatesun(){

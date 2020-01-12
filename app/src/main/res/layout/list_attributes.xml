@@ -38,7 +38,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time Taken: "
+            android:text="Time Taken(s): "
             android:textColor="#FFFFFF" />
 
         <TextView
@@ -59,8 +59,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:text="Distance: "/>
+            android:text="Distance (km): "
+            android:textColor="#FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,8 +81,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:text="Speed : "/>
+            android:text="Speed(kmph) : "
+            android:textColor="#FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"

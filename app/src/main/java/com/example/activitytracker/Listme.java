@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -31,23 +33,25 @@ public class Listme extends AppCompatActivity {
     attributeListAdapter adapter;
     private ArrayList<attributes> mAttibutesList;
     public int numberoflogs = 0 ;
+    TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate ( savedInstanceState );
         setContentView ( R.layout.activity_listme2 );
-
+        final Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         resolver = getContentResolver ();
         //runs the display function
         final DBhandler dbhandler = new DBhandler ( this );
         getInfo = dbhandler.getinfo ();
         getfastest = dbhandler.getfastest();
         getfurtherst = dbhandler.getfurthest();
-        gettotal = dbhandler.gettotal();
+        text = findViewById(R.id.text);
+    //    gettotal = dbhandler.gettotal();
         Log.d ( "g53mdp", "oncreate works" );
         Spinner dropdown = findViewById(R.id.spinner);
       //  dropdown.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
-        String[] items = new String[]{"Select A Question", "When did I run  ?", "When did I exercise more than 10km?","What is my Total distance so far?"};
+        String[] items = new String[]{"Select A Question", "When did I run  ?", "When did I exercise more than 10km?"};
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>
                 (this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter2);
@@ -58,13 +62,12 @@ public class Listme extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
+                        v.vibrate(100);
                         Toast.makeText(parent.getContext(), "Welcome", Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
                         mAttibutesList = new ArrayList<> (  );
-//grabs the data from the database and displays into to an
-//array list while . This function will grab the data as is
-//will no sorts
+//shows the logs the user RAN
                         while(getfastest.moveToNext () ){
                             mAttibutesList.add ( new attributes (  getfastest.getString ( getfastest.getColumnIndex ( "datetime" ) ),
                                     getfastest.getString ( getfastest.getColumnIndex ( "time" ) ),
@@ -76,13 +79,12 @@ public class Listme extends AppCompatActivity {
                         adapter = new attributeListAdapter ( getApplicationContext (), mAttibutesList );
                         listView.setAdapter ( adapter );
                       //  Toast.makeText(parent.getContext(), "Spinner item 2!", Toast.LENGTH_SHORT).show();
+                        v.vibrate(100);
                         Toast.makeText(parent.getContext(), "You cant run from your problems", Toast.LENGTH_SHORT).show();
                         break;
                     case 2:
                         mAttibutesList = new ArrayList<> (  );
-//grabs the data from the database and displays into to an
-//array list while . This function will grab the data as is
-//will no sorts
+//displays the distances traveled over 10km
                         while(getfurtherst.moveToNext () ){
                             mAttibutesList.add ( new attributes (  getfurtherst.getString ( getfurtherst.getColumnIndex ( "datetime" ) ),
                                     getfurtherst.getString ( getfurtherst.getColumnIndex ( "time" ) ),
@@ -93,6 +95,7 @@ public class Listme extends AppCompatActivity {
 
                         adapter = new attributeListAdapter ( getApplicationContext (), mAttibutesList );
                         listView.setAdapter ( adapter );
+                        v.vibrate(100);
                         Toast.makeText(parent.getContext(), "Good Lad", Toast.LENGTH_SHORT).show();
                         break;
                  /*   case 3:
@@ -136,6 +139,7 @@ public class Listme extends AppCompatActivity {
         adapter = new attributeListAdapter ( getApplicationContext (), mAttibutesList );
         listView.setAdapter ( adapter );
         numberoflogs = listView.getCount();
+        text.setText("The number of logs are"+numberoflogs);
         Log.d ( "The number of logs are", String.valueOf ( numberoflogs ) );
 
         listView.setOnItemLongClickListener ( new AdapterView.OnItemLongClickListener () {

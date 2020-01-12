@@ -71,6 +71,8 @@ public class DBhandler extends SQLiteOpenHelper {
         Cursor data  = db.rawQuery ("SELECT * FROM logstable WHERE distance >= 10", null  );
         return data;
     }
+
+    //gets the total amount of KM you ranA
     public  Cursor gettotal(){
         SQLiteDatabase db = this.getWritableDatabase ();
 
