@@ -331,7 +331,7 @@ IntentFilter intentFilter;
         float calculatedspeed = dis / time1;
 
 
-        if (calculatedspeed > 8 ){
+        if (calculatedspeed >= 8 ){
             Toast.makeText(MapsActivity.this,
                     "That was a god Run",
                     Toast.LENGTH_SHORT).show();

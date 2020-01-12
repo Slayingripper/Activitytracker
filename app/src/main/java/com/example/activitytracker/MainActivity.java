@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DigitalClock;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import java.util.Calendar;
 
 import org.shredzone.commons.suncalc.SunTimes;
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         startbtn = findViewById(R.id.startbtn);
         stopbtn = findViewById(R.id.stopbtn);
         Log.d(TAG, "Buttons created");
-        calculatesun();
+
 
     }
 // opens the list view showin the database 
@@ -58,6 +60,9 @@ public  void onexit (View view) {
     android.os.Process.killProcess(android.os.Process.myPid());
     System.exit(1);
 }
+public void onsun(View view){
+    calculatesun();
+}
 public void calculatesun(){
         SunTimes times = SunTimes.compute()
             .on(date)       // set a date
@@ -65,6 +70,10 @@ public void calculatesun(){
             .execute();     // get the results
     System.out.println("Sunrise: " + times.getRise());
     System.out.println("Sunset: " + times.getSet());
+    Toast.makeText(MainActivity.this,
+            "Sunrise:" + times.getRise() + " Sunset:" + times.getSet(),
+            Toast.LENGTH_SHORT).show();
 
 }
+
 }

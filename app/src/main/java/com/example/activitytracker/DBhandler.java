@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 public class DBhandler extends SQLiteOpenHelper {
     SQLiteDatabase.CursorFactory factory;
     private ContentResolver mycr;
@@ -56,16 +59,24 @@ public class DBhandler extends SQLiteOpenHelper {
         Cursor data  = db.rawQuery ("SELECT * FROM " + TABLE_LOGS + " ORDER by time", null  );
         return data;
     }
-    //shows the fastest log
+    //shows logs which show running
     public  Cursor getfastest(){
         SQLiteDatabase db = this.getWritableDatabase ();
-        Cursor data  = db.rawQuery ("SELECT * FROM " + TABLE_LOGS + " ORDER by distance DESC", null  );
+        Cursor data  = db.rawQuery ("SELECT * FROM logstable WHERE speed >=8", null  );
         return data;
     }
-    //shows the oldest log
-    public  Cursor getoldest(){
+    //shows disances over 10km log
+    public  Cursor getfurthest(){
         SQLiteDatabase db = this.getWritableDatabase ();
-        Cursor data  = db.rawQuery ("SELECT * FROM " + TABLE_LOGS + " ORDER by datetime DESC", null  );
+        Cursor data  = db.rawQuery ("SELECT * FROM logstable WHERE distance >= 10", null  );
+        return data;
+    }
+    public  Cursor gettotal(){
+        SQLiteDatabase db = this.getWritableDatabase ();
+
+        Cursor data  = db.rawQuery ("SELECT COUNT(distance)" + "FROM logstable;", null  );
+        int total = data.getInt(data.getColumnIndex("myTotal"));
+       // tt.getInt("total");
         return data;
     }
     // this function removes a single row of logs from the database

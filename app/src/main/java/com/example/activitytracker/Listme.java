@@ -26,7 +26,7 @@ public class Listme extends AppCompatActivity {
     //Context context = this;
     public static final String TAG = "Activitytracker";
     ContentResolver resolver;
-    Cursor getInfo,getfastest,getoldest;
+    Cursor getInfo,getfastest,getfurtherst,gettotal;
     ListView listView;
     attributeListAdapter adapter;
     private ArrayList<attributes> mAttibutesList;
@@ -41,20 +41,89 @@ public class Listme extends AppCompatActivity {
         //runs the display function
         final DBhandler dbhandler = new DBhandler ( this );
         getInfo = dbhandler.getinfo ();
+        getfastest = dbhandler.getfastest();
+        getfurtherst = dbhandler.getfurthest();
+        gettotal = dbhandler.gettotal();
         Log.d ( "g53mdp", "oncreate works" );
         Spinner dropdown = findViewById(R.id.spinner);
-        String[] items = new String[]{"1", "2", "three"};
+      //  dropdown.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        String[] items = new String[]{"Select A Question", "When did I run  ?", "When did I exercise more than 10km?","What is my Total distance so far?"};
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>
                 (this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter2);
         listView = findViewById ( R.id.dateList );
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                switch (position) {
+                    case 0:
+                        Toast.makeText(parent.getContext(), "Welcome", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        mAttibutesList = new ArrayList<> (  );
+//grabs the data from the database and displays into to an
+//array list while . This function will grab the data as is
+//will no sorts
+                        while(getfastest.moveToNext () ){
+                            mAttibutesList.add ( new attributes (  getfastest.getString ( getfastest.getColumnIndex ( "datetime" ) ),
+                                    getfastest.getString ( getfastest.getColumnIndex ( "time" ) ),
+                                    getfastest.getString ( getfastest.getColumnIndex ( "distance" ) ) ,
+                                    getfastest.getString ( getfastest.getColumnIndex ( "speed" ) ) ) );
+
+                        }
+
+                        adapter = new attributeListAdapter ( getApplicationContext (), mAttibutesList );
+                        listView.setAdapter ( adapter );
+                      //  Toast.makeText(parent.getContext(), "Spinner item 2!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(parent.getContext(), "You cant run from your problems", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        mAttibutesList = new ArrayList<> (  );
+//grabs the data from the database and displays into to an
+//array list while . This function will grab the data as is
+//will no sorts
+                        while(getfurtherst.moveToNext () ){
+                            mAttibutesList.add ( new attributes (  getfurtherst.getString ( getfurtherst.getColumnIndex ( "datetime" ) ),
+                                    getfurtherst.getString ( getfurtherst.getColumnIndex ( "time" ) ),
+                                    getfurtherst.getString ( getfurtherst.getColumnIndex ( "distance" ) ) ,
+                                    getfurtherst.getString ( getfurtherst.getColumnIndex ( "speed" ) ) ) );
+
+                        }
+
+                        adapter = new attributeListAdapter ( getApplicationContext (), mAttibutesList );
+                        listView.setAdapter ( adapter );
+                        Toast.makeText(parent.getContext(), "Good Lad", Toast.LENGTH_SHORT).show();
+                        break;
+                 /*   case 3:
+                        mAttibutesList = new ArrayList<> (  );
+                        while(gettotal.moveToNext () ){
+                            mAttibutesList.add ( new attributes (  gettotal.getString ( gettotal.getColumnIndex ( "datetime" ) ),
+                                    gettotal.getString ( gettotal.getColumnIndex ( "time" ) ),
+                                    gettotal.getString ( gettotal.getColumnIndex ( "distance" ) ) ,
+                                    gettotal.getString ( gettotal.getColumnIndex ( "speed" ) ) ) );
+
+                        }
+
+                        adapter = new attributeListAdapter ( getApplicationContext (), mAttibutesList );
+                        listView.setAdapter ( adapter );
+                        Toast.makeText(parent.getContext(), "Good Lad", Toast.LENGTH_SHORT).show();
+                        break;*/
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+                // sometimes you need nothing here
+            }
+        });;
 
 
 
         mAttibutesList = new ArrayList<> (  );
 //grabs the data from the database and displays into to an
-//array list while . This function will grab the data as is 
+//array list while . This function will grab the data as is
 //will no sorts
         while(getInfo.moveToNext () ){
             mAttibutesList.add ( new attributes (  getInfo.getString ( getInfo.getColumnIndex ( "datetime" ) ),
@@ -106,17 +175,18 @@ public class Listme extends AppCompatActivity {
     
     // we use a drop down spinner to query the database witb questions 
     
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id)
+   /* public void onItemSelected(AdapterView<?> parent, View v, int position, long id)
     {
 
         switch (position) {
             case 0:
 
-                Toast.makeText(Listme.this, "Item Deleted", Toast.LENGTH_LONG).show();
                 // Whatever you want to happen when the first item gets selected
                 break;
             case 1:
+                String  fast = getfastest.getString ( getfastest.getColumnIndex ( "speed" ));
 
+                Toast.makeText(Listme.this,"fastests time is "+ fast, Toast.LENGTH_LONG).show();
 
                 // Whatever you want to happen when the second item gets selected
                 break;
@@ -133,5 +203,5 @@ public class Listme extends AppCompatActivity {
 
     public void onNothingSelected(AdapterView<?> parent) {
         // TODO Auto-generated method stub
-    }
+    }*/
 }
