@@ -1,6 +1,8 @@
 # Android Activity Tracker 
 
 ![alt text](https://raw.githubusercontent.com/Slayingripper/Activitytracker/master/100106099_682065215906252_1317515990103228416_n.jpg)
+
+# Overview
 A simple android based activity tracker
 
 # Features 
